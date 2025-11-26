@@ -1,0 +1,25 @@
+import { BookOpen } from "lucide-react";
+import logo from "@/assets/logo.png";
+
+export const Footer = () => {
+  return (
+    <footer className="border-t border-border bg-muted/30 mt-auto">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="Academia Platform" className="h-6 w-6" />
+            <span className="font-semibold text-primary">Academia Platform</span>
+          </div>
+          <p className="text-sm text-muted-foreground text-center">
+            © {new Date().getFullYear()} Academia Platform. Empowering students to succeed.
+          </p>
+          <div className="flex gap-4 text-sm text-muted-foreground">
+            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
