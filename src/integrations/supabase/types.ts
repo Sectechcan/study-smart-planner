@@ -14,16 +14,201 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          course: Database["public"]["Enums"]["shs_course"] | null
+          created_at: string
+          display_name: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          course?: Database["public"]["Enums"]["shs_course"] | null
+          created_at?: string
+          display_name: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          course?: Database["public"]["Enums"]["shs_course"] | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          answers: Json | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          questions: Json
+          score: number | null
+          user_id: string
+          week_start_date: string
+        }
+        Insert: {
+          answers?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          questions: Json
+          score?: number | null
+          user_id: string
+          week_start_date: string
+        }
+        Update: {
+          answers?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          questions?: Json
+          score?: number | null
+          user_id?: string
+          week_start_date?: string
+        }
+        Relationships: []
+      }
+      quiz_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string
+          difficulty: string | null
+          id: string
+          option_a: string
+          option_b: string
+          option_c: string
+          option_d: string
+          question: string
+          subject: string
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string
+          difficulty?: string | null
+          id?: string
+          option_a: string
+          option_b: string
+          option_c: string
+          option_d: string
+          question: string
+          subject: string
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string
+          difficulty?: string | null
+          id?: string
+          option_a?: string
+          option_b?: string
+          option_c?: string
+          option_d?: string
+          question?: string
+          subject?: string
+        }
+        Relationships: []
+      }
+      study_plans: {
+        Row: {
+          course: Database["public"]["Enums"]["shs_course"]
+          created_at: string
+          day_of_week: number
+          id: string
+          subject: string
+          time_block: Database["public"]["Enums"]["study_time_block"]
+          user_id: string
+          week_start_date: string
+        }
+        Insert: {
+          course: Database["public"]["Enums"]["shs_course"]
+          created_at?: string
+          day_of_week: number
+          id?: string
+          subject: string
+          time_block: Database["public"]["Enums"]["study_time_block"]
+          user_id: string
+          week_start_date: string
+        }
+        Update: {
+          course?: Database["public"]["Enums"]["shs_course"]
+          created_at?: string
+          day_of_week?: number
+          id?: string
+          subject?: string
+          time_block?: Database["public"]["Enums"]["study_time_block"]
+          user_id?: string
+          week_start_date?: string
+        }
+        Relationships: []
+      }
+      study_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          time_blocks: Database["public"]["Enums"]["study_time_block"][]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          time_blocks?: Database["public"]["Enums"]["study_time_block"][]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          time_blocks?: Database["public"]["Enums"]["study_time_block"][]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "student"
+      shs_course:
+        | "general_science"
+        | "general_arts"
+        | "business"
+        | "home_economics"
+      study_time_block: "morning" | "afternoon" | "evening"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +335,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "student"],
+      shs_course: [
+        "general_science",
+        "general_arts",
+        "business",
+        "home_economics",
+      ],
+      study_time_block: ["morning", "afternoon", "evening"],
+    },
   },
 } as const
