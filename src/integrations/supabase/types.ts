@@ -44,7 +44,7 @@ export type Database = {
           completed_at: string | null
           created_at: string
           id: string
-          questions: Json
+          question_ids: string[]
           score: number | null
           user_id: string
           week_start_date: string
@@ -54,7 +54,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           id?: string
-          questions: Json
+          question_ids?: string[]
           score?: number | null
           user_id: string
           week_start_date: string
@@ -64,7 +64,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           id?: string
-          questions?: Json
+          question_ids?: string[]
           score?: number | null
           user_id?: string
           week_start_date?: string
@@ -77,6 +77,7 @@ export type Database = {
           created_at: string
           difficulty: string | null
           id: string
+          is_calculation: boolean
           option_a: string
           option_b: string
           option_c: string
@@ -89,6 +90,7 @@ export type Database = {
           created_at?: string
           difficulty?: string | null
           id?: string
+          is_calculation?: boolean
           option_a: string
           option_b: string
           option_c: string
@@ -101,6 +103,7 @@ export type Database = {
           created_at?: string
           difficulty?: string | null
           id?: string
+          is_calculation?: boolean
           option_a?: string
           option_b?: string
           option_c?: string
