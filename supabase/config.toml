@@ -1,1 +1,7 @@
 project_id = "idbksniffmzdifciqikh"
+
+[functions.validate-quiz]
+verify_jwt = true
+
+[functions.get-weekly-quiz]
+verify_jwt = true
