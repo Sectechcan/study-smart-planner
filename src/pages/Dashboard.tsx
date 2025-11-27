@@ -9,13 +9,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BookOpen, Calendar, Settings, Trophy } from "lucide-react";
 import { toast } from "sonner";
-
-const courses = [
-  { id: "general-science", name: "General Science" },
-  { id: "general-arts", name: "General Arts" },
-  { id: "business", name: "Business" },
-  { id: "home-economics", name: "Home Economics" },
-];
+import { courseSubjects, getSubjectsForCourse } from "@/data/courseSubjects";
 
 const timeBlocks = [
   { id: "morning", label: "Morning (6AM - 12PM)" },
@@ -26,7 +20,23 @@ const timeBlocks = [
 export default function Dashboard() {
   const navigate = useNavigate();
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedTimeBlocks, setSelectedTimeBlocks] = useState<string[]>([]);
+
+  const availableSubjects = getSubjectsForCourse(selectedCourse);
+
+  const handleCourseChange = (courseId: string) => {
+    setSelectedCourse(courseId);
+    setSelectedSubjects([]); // Reset subjects when course changes
+  };
+
+  const handleSubjectChange = (subjectName: string, checked: boolean) => {
+    if (checked) {
+      setSelectedSubjects([...selectedSubjects, subjectName]);
+    } else {
+      setSelectedSubjects(selectedSubjects.filter((s) => s !== subjectName));
+    }
+  };
 
   const handleTimeBlockChange = (blockId: string, checked: boolean) => {
     if (checked) {
@@ -39,6 +49,10 @@ export default function Dashboard() {
   const handleGenerateSchedule = () => {
     if (!selectedCourse) {
       toast.error("Please select a course");
+      return;
+    }
+    if (selectedSubjects.length === 0) {
+      toast.error("Please select at least one subject");
       return;
     }
     if (selectedTimeBlocks.length === 0) {
@@ -124,40 +138,75 @@ export default function Dashboard() {
             </Card>
           </div>
 
-          {/* Course Selection */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
+          {/* Step 1: Course Selection */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Step 1: Select Your Course</CardTitle>
+              <CardDescription>
+                Choose the SHS course you are currently studying
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RadioGroup value={selectedCourse} onValueChange={handleCourseChange}>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {courseSubjects.map((course) => (
+                    <div key={course.id} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+                      <RadioGroupItem value={course.id} id={course.id} />
+                      <Label htmlFor={course.id} className="cursor-pointer flex-1">
+                        {course.name}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </RadioGroup>
+            </CardContent>
+          </Card>
+
+          {/* Step 2: Subject Selection - Only show if course is selected */}
+          {selectedCourse && (
+            <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Select Your Course</CardTitle>
+                <CardTitle>Step 2: Select Your Subjects</CardTitle>
                 <CardDescription>
-                  Choose the SHS course you are currently studying
+                  Choose the subjects you are offering (optional subjects are marked)
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <RadioGroup value={selectedCourse} onValueChange={setSelectedCourse}>
-                  <div className="space-y-3">
-                    {courses.map((course) => (
-                      <div key={course.id} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
-                        <RadioGroupItem value={course.id} id={course.id} />
-                        <Label htmlFor={course.id} className="cursor-pointer flex-1">
-                          {course.name}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </RadioGroup>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {availableSubjects.map((subject) => (
+                    <div 
+                      key={subject.name} 
+                      className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                    >
+                      <Checkbox
+                        id={subject.name}
+                        checked={selectedSubjects.includes(subject.name)}
+                        onCheckedChange={(checked) => handleSubjectChange(subject.name, checked as boolean)}
+                      />
+                      <Label htmlFor={subject.name} className="cursor-pointer flex-1">
+                        {subject.name}
+                        {subject.optional && (
+                          <span className="ml-2 text-xs text-muted-foreground">(Optional)</span>
+                        )}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
+          )}
 
-            <Card>
+          {/* Step 3: Time Selection - Only show if subjects are selected */}
+          {selectedSubjects.length > 0 && (
+            <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Select Study Time</CardTitle>
+                <CardTitle>Step 3: Select Study Time</CardTitle>
                 <CardDescription>
-                  Choose when you prefer to study (select multiple)
+                  Choose when you prefer to study (you can select multiple times)
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="grid sm:grid-cols-3 gap-3">
                   {timeBlocks.map((block) => (
                     <div key={block.id} className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
                       <Checkbox
@@ -173,7 +222,7 @@ export default function Dashboard() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          )}
 
           <div className="mt-8 text-center">
             <Button size="lg" onClick={handleGenerateSchedule} className="px-8">
